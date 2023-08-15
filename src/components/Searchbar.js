@@ -9,6 +9,7 @@ export class ImageSearch extends Component {
         gallery: [],
         isLoading: false,
         error: null,
+        search: ''
     }
 
     async componentDidMount() {
@@ -23,13 +24,20 @@ export class ImageSearch extends Component {
         }
     }
 
+    handleSubmit = e => {
+        e.preventDefault();
+        this.setState({search: e.target.value})
+        
+        console.log(this.search)
+    }
+
     render() {
-        const { gallery, isLoading, error } = this.state;
+        const { gallery, isLoading, error, search } = this.state;
         return (
             <div>
                 <header class="searchbar">
                     <form class="form">
-                        <button type="submit" class="button">
+                        <button type="submit" class="button" onSubmit={this.handleSubmit}>
                             <span class="button-label">Search</span>
                         </button>
 
@@ -39,6 +47,7 @@ export class ImageSearch extends Component {
                             autocomplete="off"
                             autofocus
                             placeholder="Search images and photos"
+                            value={search}
                         />
                     </form>
                 </header>
