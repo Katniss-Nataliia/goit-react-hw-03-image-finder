@@ -10,6 +10,8 @@ export class ImageSearch extends Component {
         error: null,
         searchText: ''
     }
+    
+    //could you please explain why we need this part and where we use it. I added this as I followed Zohaib's code, but i do not understand it much.
 
     async componentDidMount() {
         try {
