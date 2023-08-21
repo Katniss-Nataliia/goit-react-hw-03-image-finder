@@ -1,7 +1,6 @@
 import { Component } from "react";
 import { fetchImages } from "services/api";
 
-
 const ERROR_MSG = `Something went wrong, please reload the page`;
 
 export class ImageSearch extends Component {
@@ -9,7 +8,7 @@ export class ImageSearch extends Component {
         gallery: [],
         isLoading: false,
         error: null,
-        search: ''
+        searchText: ''
     }
 
     async componentDidMount() {
@@ -26,28 +25,41 @@ export class ImageSearch extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        this.setState({search: e.target.value})
-        
-        console.log(this.search)
+        this.setState({
+            searchText:e.target.value,
+        })
+        if (this.searchText === ''){
+            this.setState({
+                gallery:[]
+            })
+        }else{
+            this.setState({
+                gallery: fetchImages,
+            })
+            console.log('user search: ', this.searchText)
+        }
+         
     }
 
     render() {
-        const { gallery, isLoading, error, search } = this.state;
+        const {isLoading, searchText } = this.state;
         return (
             <div>
-                <header class="searchbar">
-                    <form class="form">
-                        <button type="submit" class="button" onSubmit={this.handleSubmit}>
-                            <span class="button-label">Search</span>
+                <header className="searchbar">
+                    <form className="form">
+                        <button type="submit" className="button" onClick={this.handleSubmit}>
+                            <span className="button-label">Search</span>
                         </button>
 
                         <input
-                            class="input"
+                            className="input"
                             type="text"
-                            autocomplete="off"
-                            autofocus
+                            autoComplete="off"
+                            autoFocus
                             placeholder="Search images and photos"
-                            value={search}
+                            value={searchText}
+                            // onChange={e=>this.setState({searchsearchText: e.target.value})}
+                            onChange={this.handleSubmit}
                         />
                     </form>
                 </header>
