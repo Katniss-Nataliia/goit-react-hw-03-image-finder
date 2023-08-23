@@ -8,11 +8,8 @@ export class ImageSearch extends Component {
         gallery: [],
         isLoading: false,
         error: null,
-        searchText: ''
+        searchText: '',
     }
-    
-    //could you please explain why we need this part and where we use it. I added this as I followed Zohaib's code, but i do not understand it much.
-
     async componentDidMount() {
         try {
             this.setState({ isLoading: true, error: null });
@@ -25,21 +22,42 @@ export class ImageSearch extends Component {
         }
     }
 
-    handleSubmit = e => {
-        e.preventDefault();
+    handleSearchChange = e => {
         this.setState({
-            searchText:e.target.value,
-        })
-        if (this.searchText === ''){
+            searchText:e.target.value
+        });
+    };
+
+    handleSubmit = async e => {
+        e.preventDefault();
+        const {searchText} = this.state; //Destructuring searchText from state
+        
+        if (searchText === ''){
             this.setState({
-                gallery:[]
-            })
-        }else{
-            this.setState({
-                gallery: fetchImages,
-            })
-            console.log('user search: ', this.searchText)
+                gallery:[],
+                isLoading: false,
+            });
+            return;
         }
+
+        this.setState({isLoading:true, error: null});
+
+        try{
+            // Fetching images based on search text and updating the gallery state
+            const fetchedImages = await fetchImages(searchText);
+            const hits = fetchedImages.hits;
+            this.setState({
+                gallery: hits,
+                isLoading: false,
+            })
+        } catch(error){
+            this.setState({
+                error:ERROR_MSG,
+                isLoading:false,
+            })
+        }
+        // Logging the current state of the gallery array
+        console.log('react file:Search.js gallery: ', this.state.gallery)
          
     }
 
@@ -49,7 +67,9 @@ export class ImageSearch extends Component {
             <div>
                 <header className="searchbar">
                     <form className="form">
-                        <button type="submit" className="button" onClick={this.handleSubmit}>
+                        <button type="submit" 
+                        className="button" 
+                        onClick={this.handleSubmit}>
                             <span className="button-label">Search</span>
                         </button>
 
@@ -61,7 +81,7 @@ export class ImageSearch extends Component {
                             placeholder="Search images and photos"
                             value={searchText}
                             // onChange={e=>this.setState({searchsearchText: e.target.value})}
-                            onChange={this.handleSubmit}
+                            onChange={this.handleSearchChange}
                         />
                     </form>
                 </header>
