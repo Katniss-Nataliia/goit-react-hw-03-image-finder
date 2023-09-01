@@ -1,15 +1,19 @@
+import React, {Component} from 'react';
 
-export const ImageCard = ({gallery}) => {
-    <ul>
-        {gallery.map(({id, userImageURL}) => (
-            <li key={id}>
-                <img src={userImageURL}></img>
+export class ImageCard extends Component {
+    render(){
+        const {gallery} = this.props;
 
-            </li>
-        ))}
-
-    </ul>
-
-
-
+        return(
+            <ul>
+                {gallery.map(({id, webformatURL, tags})=>(
+                    <li key={id}>
+                        <img src={webformatURL} alt={tags} />
+                    </li>
+                ))}
+            </ul>
+        )
+    }
 }
+
+

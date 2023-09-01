@@ -1,26 +1,11 @@
 import { Component } from "react";
-import { fetchImages } from "services/api";
-
-const ERROR_MSG = `Something went wrong, please reload the page`;
 
 export class ImageSearch extends Component {
     state = {
-        gallery: [],
-        isLoading: false,
-        error: null,
         searchText: '',
     }
-    async componentDidMount() {
-        try {
-            this.setState({ isLoading: true, error: null });
-            const fetchedImages = await fetchImages();
-            this.setState({ gallery: fetchedImages })
-        } catch (error) {
-            this.setState({ error: ERROR_MSG })
-        } finally {
-            this.setState({ isLoading: false })
-        }
-    }
+
+// function to handle changes in the search input
 
     handleSearchChange = e => {
         this.setState({
@@ -28,43 +13,28 @@ export class ImageSearch extends Component {
         });
     };
 
+//function to handle search from submission
     handleSubmit = async e => {
         e.preventDefault();
         const {searchText} = this.state; //Destructuring searchText from state
-        
-        if (searchText === ''){
-            this.setState({
-                gallery:[],
-                isLoading: false,
-            });
-            return;
-        }
+        const {onSearchSubmit} = this.props;
 
-        this.setState({isLoading:true, error: null});
-
-        try{
-            // Fetching images based on search text and updating the gallery state
-            const fetchedImages = await fetchImages(searchText);
-            const hits = fetchedImages.hits;
-            this.setState({
-                gallery: hits,
-                isLoading: false,
-            })
-        } catch(error){
-            this.setState({
-                error:ERROR_MSG,
-                isLoading:false,
-            })
+        if (searchText.trim() === ''){
+            return; //Don't perform search if the input is empty
         }
+        // Call the function passed from App component to initiate the search
+        onSearchSubmit(searchText, 1); // Passing search text and initial page (missing logic to change the page)
+
         // Logging the current state of the gallery array
         console.log('react file:Search.js gallery: ', this.state.gallery)
          
     }
 
     render() {
-        const {isLoading, searchText } = this.state;
+        const {searchText } = this.state;
         return (
             <div>
+                {/* Search bar UI */}
                 <header className="searchbar">
                     <form className="form">
                         <button type="submit" 
@@ -80,7 +50,6 @@ export class ImageSearch extends Component {
                             autoFocus
                             placeholder="Search images and photos"
                             value={searchText}
-                            // onChange={e=>this.setState({searchsearchText: e.target.value})}
                             onChange={this.handleSearchChange}
                         />
                     </form>
