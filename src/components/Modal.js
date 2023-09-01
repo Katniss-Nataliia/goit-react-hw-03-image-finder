@@ -20,6 +20,7 @@ export const ImageModal = ({ isOpen, largeImageURL, onClose }) => {
             onRequestClose={onClose}
             style={customStyles}
             contentLable="Image modal">
+                
             <div className="overlay">
                 <div className="modal">
                     <img src={largeImageURL} alt="picture"  width='640'/>
